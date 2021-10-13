@@ -1,0 +1,1 @@
+Comandos, detalhes e bibliotecas utilizadas.
