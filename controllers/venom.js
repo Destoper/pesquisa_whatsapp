@@ -13,6 +13,33 @@ const respostasTexto = ['UM',1,'um',1,'Um',1,'DOIS',2,'dois',2,'Dois',2,'TRES',3
 var resp_correta = false;
 var nota = 0;
 
+async function send_img(numero, imagem){
+  await envio
+  .sendImage(
+    numero,
+    imagem,
+    'Like',
+    'Obrigado pela Participação!'
+  )
+  .then((result) => {
+    console.log('Imagem Enviada');
+  })
+  .catch((erro) => {
+    console.error('Error when sending: ', erro); 
+  });
+}
+
+async function send_loc(numero){
+  await envio
+  .sendLocation(numero, '-13.6561589', '-69.7309264', 'Brasil')
+  .then((result) => {
+    console.log('Localização Enviada'); 
+  })
+  .catch((erro) => {
+    console.error('Error when sending: ', erro); 
+  });
+}
+
 function msg(numero, msg) {
   envio.sendText(numero, msg).then((result) => {
     console.log(time(),'MSG Enviada');
@@ -43,7 +70,7 @@ async function chamar(numero, mensagem){
     if(res.length === 1){
       // Se o número já respondeu corretamente a pesquisa
       if(res[0].finalizado == 'sim'){
-        msg(numero, mensagem_ja_respondeu);
+        msg(numero, mensagem_ja_respondeu);                     
       }
       // Se o cliente participa da pesquisa e ainda não respondeu corretamente
       else{
@@ -65,6 +92,7 @@ async function chamar(numero, mensagem){
                 console.log(time(),"Erro ao gravar no BD", err); 
               }else{
                 msg(numero, mensagem_agradecendo);
+                send_img(numero, 'test.jpg'); 
                 console.log(time(),"Respota Gravada no BD"); 
               }
             });  
@@ -81,6 +109,7 @@ async function chamar(numero, mensagem){
     // Se o número não participa da pesquisa
     else{
       msg(numero, mensagem_padrao);
+      send_loc(numero)
     }
   }).catch((er)=>{
       console.log(time(),er);
@@ -149,7 +178,7 @@ class Zap{
           error: true,
           code: 404,
           msg: "Erro ao Enviar a Pesquisa",
-          err: erro
+          err: err
       });
     });
 
